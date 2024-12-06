@@ -67,3 +67,12 @@ jobs:
     - name: Get service URL
       run: |
         minikube service hello-world-nginx --url
+
+    # Step 11: Port-forward service to GitHub Actions runner
+    - name: Port-forward service to GitHub Actions runner
+      run: |
+        kubectl port-forward svc/hello-world-nginx 8080:80 &
+        sleep 10 # Give it time to establish the port forward
+    - name: Test the service via curl
+      run: |
+        curl http://localhost:8080
