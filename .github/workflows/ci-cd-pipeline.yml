@@ -60,8 +60,7 @@ jobs:
     # Step 8: Apply Kubernetes Manifests for the Nginx application
     - name: Apply Kubernetes Manifests
       run: |
-        kubectl apply -f ./k8s/nginx-deployment.yaml
-        kubectl apply -f ./k8s/nginx-service.yaml
+        kubectl apply -f ./k8s/hello-world-nginx-deployment.yaml
 
     # Step 9: Verify the Deployment
     - name: Verify Deployment
