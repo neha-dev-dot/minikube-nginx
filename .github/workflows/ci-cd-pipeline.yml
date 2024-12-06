@@ -1,4 +1,4 @@
-name: CI/CD Pipeline for Minikube Deployment
+name: CI/CD Pipeline for Minikube with Nginx Deployment
 
 on:
   push:
