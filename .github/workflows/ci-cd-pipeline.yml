@@ -76,5 +76,3 @@ jobs:
     - name: Test the service via curl
       run: |
         curl http://localhost:8080
-
-        
