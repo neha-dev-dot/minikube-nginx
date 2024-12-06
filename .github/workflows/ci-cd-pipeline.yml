@@ -67,3 +67,6 @@ jobs:
     - name: Print Access URL
       run: |
         echo "Service is accessible at http://$MINIKUBE_IP:31048"
+    - name: Get service URL
+      run: |
+        minikube service hello-world-nginx --url
