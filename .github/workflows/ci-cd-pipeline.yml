@@ -21,38 +21,49 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    # Step 3: Log in to DockerHub if Docker secrets are available
+    # Step 3: Check for Docker username and password secrets
+    - name: Check Docker Secrets
+      id: docker-secrets-check
+      run: |
+        if [[ -z "${{ secrets.DOCKER_USERNAME }}" || -z "${{ secrets.DOCKER_PASSWORD }}" ]]; then
+          echo "Docker secrets not set"
+          exit 1
+        else
+          echo "Docker secrets are set"
+        fi
+
+    # Step 4: Log in to DockerHub (only runs if Docker secrets are set)
     - name: Log in to DockerHub
-      if: ${{ secrets.DOCKER_USERNAME && secrets.DOCKER_PASSWORD }}
+      if: steps.docker-secrets-check.outcome == 'success'
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    # Step 4: Set up Minikube
+    # Step 5: Set up Minikube
     - name: Set up Minikube
       run: |
         curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
         sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
-    # Step 5: Start Minikube
+    # Step 6: Start Minikube
     - name: Start Minikube
       run: |
         minikube start --driver=docker
 
-    # Step 6: Set up kubectl using the KUBE_CONFIG secret
+    # Step 7: Set up kubectl using the KUBE_CONFIG secret
     - name: Set up kubectl
       run: |
         mkdir -p $HOME/.kube
         echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
 
-    # Step 7: Apply Kubernetes Manifests for the Nginx application
+    # Step 8: Apply Kubernetes Manifests for the Nginx application
     - name: Apply Kubernetes Manifests
       run: |
         kubectl apply -f ./k8s/nginx-deployment.yaml
         kubectl apply -f ./k8s/nginx-service.yaml
 
-    # Step 8: Verify the Deployment
+    # Step 9: Verify the Deployment
     - name: Verify Deployment
       run: |
         kubectl rollout status deployment/hello-world-nginx
