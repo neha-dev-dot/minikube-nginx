@@ -28,22 +28,22 @@ jobs:
       run: |
         minikube start --driver=docker
 
-    # Step 4: Set up kubectl to use Minikube's config
+    # Step 4: Wait for Minikube to be fully ready
+    - name: Wait for Minikube to be ready
+      run: |
+        minikube status
+        sleep 30  # Sleep for 30 seconds to ensure Minikube has fully started
+
+    # Step 5: Set up kubectl to use Minikube's config
     - name: Set up kubectl for Minikube
       run: |
         mkdir -p $HOME/.kube
-        echo "$(minikube kubectl -- get kubeconfig)" > $HOME/.kube/config
-
-    # Step 5: Verify kubectl setup
-    - name: Verify kubectl setup
-      run: |
-        kubectl config view
-        kubectl config current-context
+        minikube kubectl -- get pods # This ensures that kubectl is working and the kubeconfig is set up
 
     # Step 6: Apply Kubernetes Manifests for the Nginx application
     - name: Apply Kubernetes Manifests
       run: |
-        kubectl apply -f ./k8s/hello-world-nginx-deployment.yaml
+        kubectl apply -f ./hello-world-nginx-deployment.yaml 
 
     # Step 7: Verify the Deployment
     - name: Verify Deployment
