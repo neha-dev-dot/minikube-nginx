@@ -50,4 +50,3 @@ jobs:
       run: |
         kubectl rollout status deployment/hello-world-nginx
         kubectl get svc hello-world-nginx
-  
