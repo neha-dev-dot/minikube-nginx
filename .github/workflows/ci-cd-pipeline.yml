@@ -50,3 +50,20 @@ jobs:
       run: |
         kubectl rollout status deployment/hello-world-nginx
         kubectl get svc hello-world-nginx
+  
+    # Step 8: Get Minikube IP
+    - name: Get Minikube IP
+      id: minikube_ip
+      run: |
+        MINIKUBE_IP=$(minikube ip)
+        echo "MINIKUBE_IP=$MINIKUBE_IP" >> $GITHUB_ENV
+
+    # Step 9: Check and expose service
+    - name: Check if service is exposed
+      run: |
+        kubectl get svc hello-world-nginx
+
+    # Step 10: Print the service access URL
+    - name: Print Access URL
+      run: |
+        echo "Service is accessible at http://$MINIKUBE_IP:30993"
