@@ -66,4 +66,4 @@ jobs:
     # Step 10: Print the service access URL
     - name: Print Access URL
       run: |
-        echo "Service is accessible at http://$MINIKUBE_IP:30993"
+        echo "Service is accessible at http://$MINIKUBE_IP:31048"
